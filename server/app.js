@@ -1,6 +1,11 @@
 import express from 'express'
 import mysql from 'mysql2/promise'
 import cors from 'cors'
+import dotenv from 'dotenv'
+import sequelize from './db-config.js';
+import Book from './Book.js';
+
+dotenv.config()
 
 process.on('unhandledRejection', (error, promise) => {
     console.log(' Oh Lord! We forgot to handle a promise rejection here: ', promise);
@@ -18,53 +23,47 @@ app.use(cors({
 app.use(express.json())
 
 const port = 5000
-const pool = await mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: 'S+r0n9pa55w0rd',
-    database: 'test'
-})
 app.get('/', (req, res) => {
     res.send('123')
 })
 app.get('/books', async (req, res) => {
-        const query = "SELECT * FROM books"
-        const [books] = await pool.query(query)
-        res.send(books)
+    const books = await Book.findAll()
+    res.send(books)
 })
 
 app.post('/books', async (req, res) => {
-    const query = "INSERT INTO books (`title`, `desc`, `cover`) VALUES (?)"
     const {title, desc, cover} = req.body
-    const values = [
-        title,
-        desc,
-        cover,
-    ]
-
-    const [rows] = await pool.query(query, [values])
-    return res.send('book created successfully')
+    const book = await Book.create({title, desc, cover})
+    return res.send({
+        message: "New book created successfully",
+        book
+    })
 })
 
 app.delete('/books/:id', async (req, res) => {
     const id = req.params.id
-    const query = "DELETE FROM books WHERE id = ?"
-    await pool.query(query, [id])
-    res.send('deleted successfully')
+    await Book.destroy({where: {id}})
+    res.send('Book deleted successfully')
 })
 
 app.put('/books/:id', async (req, res) => {
     const id = req.params.id
-    const query = "UPDATE books SET `title` = ?, `desc` = ?, `cover` = ? WHERE id = ?"
     const {title, desc, cover} = req.body
-    const values = [
-        title,
-        desc,
-        cover,
-    ]
-
-    const [rows] = await pool.query(query, [...values, id])
-    return res.send('book updated successfully')
+    const book = await Book.update({title, desc, cover}, {where: {id}})
+    return res.send({
+        message: 'Book updated successfully',
+        book
+    })
 })
 
 app.listen(port, () => console.log('Connected to port ' + port))
+
+// setup database connection
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connected to db');
+  })
+  .catch((error) => {
+    console.error('Unable to connect to the database:', error);
+  });
