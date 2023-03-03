@@ -7,7 +7,7 @@ export const Update = ({ books, fetchAllBooks }) => {
   const [book, setBook] = useState()
   const [prevBook, setPrevBook] = useState({
     title: '',
-    desc: '',
+    description: '',
     cover: '',
   })
   const navigate = useNavigate()
@@ -35,7 +35,7 @@ export const Update = ({ books, fetchAllBooks }) => {
       <h1>Edit book "{prevBook.title}"</h1>
       <div className="wrapper">
         <input onChange={handleChange} type="text" placeholder='title' name='title' defaultValue={prevBook.title} />
-        <textarea onChange={handleChange} type="text" placeholder='description' name='desc' defaultValue={prevBook.desc}/>
+        <textarea onChange={handleChange} type="text" placeholder='description' name='description' defaultValue={prevBook.description}/>
         <input onChange={handleChange} type="text" placeholder='cover' name='cover' defaultValue={prevBook.cover}/>
         <button onClick={handleClick}>Save</button>
       </div>

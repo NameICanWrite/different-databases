@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 export const Add = ({fetchAllBooks}) => {
   const [book, setBook] = useState({
     title: '',
-    desc: '',
+    description: '',
     cover: ''
   })
   const navigate = useNavigate()
@@ -25,7 +25,7 @@ export const Add = ({fetchAllBooks}) => {
     <div className='form'>
       <h1>Add New Book</h1>
       <input onChange={handleChange} type="text" placeholder='title' name='title' />
-      <textarea onChange={handleChange} type="text" placeholder='description' name='desc'/>
+      <textarea onChange={handleChange} type="text" placeholder='description' name='description'/>
       <input onChange={handleChange} type="text" placeholder='cover' name='cover'/>
       <button onClick={handleClick}>Add</button>
     </div>

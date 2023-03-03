@@ -27,7 +27,7 @@ export const Books = ({books}) => {
               currentTarget.src = defaultCover
             }} alt="" />
             <h2>{book.title}</h2>
-            <p>{book.desc}</p>
+            <p>{book.description}</p>
           </div>
         ))}
       </div>
