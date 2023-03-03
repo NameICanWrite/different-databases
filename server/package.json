@@ -19,6 +19,7 @@
     "node-mysql": "^0.4.2",
     "pg": "^8.9.0",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.29.0"
+    "sequelize": "^6.29.0",
+    "uuid": "^9.0.0"
   }
 }

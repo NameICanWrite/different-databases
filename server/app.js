@@ -3,7 +3,9 @@ import mysql from 'mysql2/promise'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import sequelize from './db-config.js';
-import Book from './Book.js';
+import redis from 'redis'
+import redisClient from './db-config.js';
+import {v4 as uuid} from 'uuid'
 
 dotenv.config()
 
@@ -27,43 +29,46 @@ app.get('/', (req, res) => {
     res.send('123')
 })
 app.get('/books', async (req, res) => {
-    const books = await Book.findAll()
-    res.send(books)
+    const books = await redisClient.hGetAll('book')
+    const booksArr = []
+    for (let id in books) {
+        books[id] = booksArr.push(JSON.parse(books[id]))
+    }
+    res.send(booksArr)
 })
 
 app.post('/books', async (req, res) => {
     const {title, description, cover} = req.body
-    const book = await Book.create({title, description, cover})
+    const id = uuid()
+    await redisClient.hSet('book', id, JSON.stringify({title, description, cover, id}))
+    
     return res.send({
         message: "New book created successfully",
-        book
+        book: {
+            title, description, cover, id
+        }
     })
 })
 
 app.delete('/books/:id', async (req, res) => {
     const id = req.params.id
-    await Book.destroy({where: {id}})
+    await redisClient.hDel('book', id)
     res.send('Book deleted successfully')
 })
 
 app.put('/books/:id', async (req, res) => {
     const id = req.params.id
     const {title, description, cover} = req.body
-    const book = await Book.update({title, description, cover}, {where: {id}})
+    await redisClient.hSet('book', id, JSON.stringify({title, description, cover, id}))
     return res.send({
         message: 'Book updated successfully',
-        book
+        book: {
+            title, description, cover, id
+        }
     })
 })
 
 app.listen(port, () => console.log('Connected to port ' + port))
 
-// setup database connection
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connected to db');
-  })
-  .catch((error) => {
-    console.error('Unable to connect to the database:', error);
-  });
+
+redisClient.connect().then(() => console.log('connected to redis'))
