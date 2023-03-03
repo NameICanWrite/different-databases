@@ -32,8 +32,8 @@ app.get('/books', async (req, res) => {
 })
 
 app.post('/books', async (req, res) => {
-    const {title, desc, cover} = req.body
-    const book = await Book.create({title, desc, cover})
+    const {title, description, cover} = req.body
+    const book = await Book.create({title, description, cover})
     return res.send({
         message: "New book created successfully",
         book
@@ -48,8 +48,8 @@ app.delete('/books/:id', async (req, res) => {
 
 app.put('/books/:id', async (req, res) => {
     const id = req.params.id
-    const {title, desc, cover} = req.body
-    const book = await Book.update({title, desc, cover}, {where: {id}})
+    const {title, description, cover} = req.body
+    const book = await Book.update({title, description, cover}, {where: {id}})
     return res.send({
         message: 'Book updated successfully',
         book

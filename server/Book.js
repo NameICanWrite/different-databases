@@ -10,7 +10,7 @@ const Book = sequelize.define('book', {
   title: {
     type: Sequelize.STRING,
   },
-  desc: {
+  description: {
     type: Sequelize.STRING,
   },
   cover: {
