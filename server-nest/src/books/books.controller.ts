@@ -1,4 +1,4 @@
-import { ValidateBookPipePipe } from './../validate-book-pipe/validate-book-pipe.pipe';
+import { ValidateBookPipePipe } from './validate-book-pipe.pipe';
 import { Controller, Get, Param, ParseIntPipe, ValidationPipe } from '@nestjs/common';
 import { Body, Delete, Post, Res, UsePipes } from '@nestjs/common/decorators';
 import { BooksService } from './books.service';
